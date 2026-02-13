@@ -3,18 +3,24 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
+import { Home } from './features/home/home/home';
+
+import { AuthModule } from './features/auth/auth.module';
 
 @NgModule({
   declarations: [
-    App
+    App,
+    Home,
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    AuthModule
   ],
   providers: [
-    provideBrowserGlobalErrorListeners()
   ],
   bootstrap: [App]
 })
-export class AppModule { }
+export class AppModule {
+
+}

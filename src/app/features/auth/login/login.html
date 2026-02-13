@@ -1,0 +1,10 @@
+<app-auth
+  [config]="config"
+  [loading]="loading"
+  [errorMessage]="errorMessage"
+  (formSubmit)="onSubmit($event)"
+></app-auth>
+
+<div>
+  <a routerLink="/register">Ainda não tem conta? Cadastre-se</a>
+</div>
