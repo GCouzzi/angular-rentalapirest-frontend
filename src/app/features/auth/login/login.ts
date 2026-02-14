@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { AuthFormConfig, LOGIN_CONFIG } from '../auth.config';
 import { AuthService } from '../../../core/services/auth.service';
 import { LoginResponse } from '../../../core/models/auth.model';
+import { AppApiError } from '../../../core/models/app-api-error.model';
 
 @Component({
   selector: 'app-login',
@@ -28,8 +29,8 @@ export class Login {
         this.loading = false;
         this._cdr.markForCheck()
       },
-      error: (err: Error) => {
-        this.errorMessage = err.message;
+      error: (err: AppApiError) => {
+        this.errorMessage = `Error ${err.status} - ${err.message}`;
         this.loading = false;
         this._cdr.markForCheck()
       },
