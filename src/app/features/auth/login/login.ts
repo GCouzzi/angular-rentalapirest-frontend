@@ -3,6 +3,7 @@ import { AuthFormConfig, LOGIN_CONFIG } from '../auth.config';
 import { AuthService } from '../../../core/services/auth.service';
 import { LoginResponse } from '../../../core/models/auth.model';
 import { AppApiError } from '../../../core/models/app-api-error.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -18,6 +19,7 @@ export class Login {
   constructor(
     private readonly _authService: AuthService,
     private readonly _cdr: ChangeDetectorRef,
+    private readonly _router: Router,
   ) {}
 
   onSubmit(formValue: any) {
@@ -28,6 +30,7 @@ export class Login {
         this._authService.setToken(response.token);
         this.loading = false;
         this._cdr.markForCheck()
+        this._router.navigate(['/home']);
       },
       error: (err: AppApiError) => {
         this.errorMessage = `Error ${err.status} - ${err.message}`;

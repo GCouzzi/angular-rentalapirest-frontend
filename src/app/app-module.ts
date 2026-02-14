@@ -1,21 +1,21 @@
-import { NgModule, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
-import { Home } from './features/home/home/home';
+import { ComponentsModule } from './shared/components/components.module';
 
-import { AuthModule } from './features/auth/auth.module';
 
 @NgModule({
   declarations: [
     App,
-    Home,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    AuthModule
+    HttpClientModule,
+    ComponentsModule,
   ],
   providers: [
   ],
