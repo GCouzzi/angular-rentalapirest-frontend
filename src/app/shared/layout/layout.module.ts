@@ -5,12 +5,14 @@ import { Footer } from './footer/footer';
 import { LayoutRoutingModule } from './layout-routing-module';
 import { PagesModule } from '../../features/pages.module';
 import { CommonModule } from '@angular/common';
+import { UsuariosSideBar } from './usuarios-side-bar/usuarios-side-bar';
+import { Usuarios } from './usuarios/usuarios';
 
 
 @NgModule({
   imports: [LayoutRoutingModule, PagesModule, CommonModule],
   exports: [Layout, Nav, Footer],
-  declarations: [Layout, Nav, Footer],
+  declarations: [Layout, Nav, Footer, UsuariosSideBar, Usuarios],
   providers: [],
 })
 export class LayoutModule { }

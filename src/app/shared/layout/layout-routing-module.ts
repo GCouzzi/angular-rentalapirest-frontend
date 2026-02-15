@@ -9,6 +9,7 @@ const routes: Routes = [
     component: Layout,
     children: [
       { path: 'home', component: Home },
+      { path: 'clientes', loadChildren: () => import('../../features/usuarios/usuarios.module').then(m => m.UsuariosModule) }
     ]
   }
 ];
