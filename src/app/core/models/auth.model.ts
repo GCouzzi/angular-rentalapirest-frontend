@@ -6,6 +6,10 @@ export interface LoginRequest {
 export interface RegisterRequest {
   username: string;
   password: string;
+  nomeCompleto: string;
+  cpf: string;
+  telefone: string;
+  email: string;
 }
 
 export interface LoginResponse {

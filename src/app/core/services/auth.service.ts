@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { LoginRequest, LoginResponse, RegisterRequest } from '../models/auth.model';
-import { catchError, Observable, pipe, throwError } from 'rxjs';
+import { LoginRequest, LoginResponse } from '../models/auth.model';
+import { catchError, Observable, throwError } from 'rxjs';
 import { AppApiError } from '../models/app-api-error.model';
 
 @Injectable({ providedIn: 'root' })
@@ -17,15 +17,19 @@ export class AuthService {
   }
 
   setToken(token: string) {
-    sessionStorage.setItem('token', token);
+    localStorage.setItem('token', token);
   }
 
   getToken(): string | null {
-    return sessionStorage.getItem('token');
+    return localStorage.getItem('token');
   }
 
   isAuthenticated(): boolean {
     return !!this.getToken();
+  }
+
+  logout(): void {
+    localStorage.removeItem('token');
   }
 
   private handleError(err: HttpErrorResponse) {

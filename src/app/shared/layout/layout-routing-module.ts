@@ -9,7 +9,9 @@ const routes: Routes = [
     component: Layout,
     children: [
       { path: 'home', component: Home },
-      { path: 'clientes', loadChildren: () => import('../../features/usuarios/usuarios.module').then(m => m.UsuariosModule) }
+      { path: 'clientes', loadChildren: () => import('../../features/usuarios/usuarios.module').then(m => m.UsuariosModule) },
+      { path: 'automoveis', loadChildren: () => import('../../features/automoveis/automoveis.module').then(m => m.AutomoveisModule) },
+      { path: 'alugueis', loadChildren: () => import('../../features/alugueis/alugueis.module').then(m => m.AlugueisModule) }
     ]
   }
 ];

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { RegisterRequest } from '../models/auth.model';
 import { catchError, Observable, throwError } from 'rxjs';
 import { AppApiError } from '../models/app-api-error.model';
+import { UsuarioResponseDTO } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root',
@@ -13,8 +14,8 @@ export class UsuarioService {
 
   constructor(private readonly _http: HttpClient) { }
 
-  register(credentials: RegisterRequest): Observable<void> {
-    return this._http.post<void>(`${this.baseUrl}`, credentials)
+  register(credentials: RegisterRequest): Observable<UsuarioResponseDTO> {
+    return this._http.post<UsuarioResponseDTO>(`${this.baseUrl}`, credentials)
     .pipe(catchError((err) => this.handleError(err)))
   }
 

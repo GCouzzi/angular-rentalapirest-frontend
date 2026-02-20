@@ -15,6 +15,7 @@ import {
 } from '@angular/forms';
 import { AuthFormConfig, FormField } from '../auth.config';
 import { passwordMatchValidator } from '../../validators/password-mismatch.validator';
+import { cpfValidator } from '../../validators/cpf.validator';
 
 @Component({
   selector: 'app-auth',
@@ -26,9 +27,10 @@ export class Auth implements OnChanges {
   @Input() config!: AuthFormConfig;
   @Input() errorMessage: string = '';
   @Input() loading = false;
+  @Input() sucessMessage: string = '';
   @Output() formSubmit = new EventEmitter<any>();
   form!: FormGroup;
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder) { }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['config'] && this.config) {
@@ -56,16 +58,20 @@ export class Auth implements OnChanges {
     for (const validator of field.validators) {
       if (validator === 'required') {
         validators.push(Validators.required);
-      }
-      if (validator.startsWith('minLength:')) {
+      } else if (validator.startsWith('minLength:')) {
         validators.push(
-          Validators.minLength(parseInt(validator.split(':')[1])),
+          Validators.minLength(parseInt(validator.split(':')[1], 10)),
         );
-      }
-      if (validator.startsWith('maxLength:')) {
+      } else if (validator.startsWith('maxLength:')) {
         validators.push(
-          Validators.maxLength(parseInt(validator.split(':')[1])),
+          Validators.maxLength(parseInt(validator.split(':')[1], 10)),
         );
+      } else if (validator.startsWith('pattern:')) {
+        validators.push(Validators.pattern(validator.substring(8)));
+      } else if (validator === 'cpf') {
+        validators.push(cpfValidator());
+      } else if (validator === 'email') {
+        validators.push(Validators.email);
       }
     }
     return validators;

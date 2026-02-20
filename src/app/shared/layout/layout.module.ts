@@ -7,10 +7,11 @@ import { PagesModule } from '../../features/pages.module';
 import { CommonModule } from '@angular/common';
 import { UsuariosSideBar } from './usuarios-side-bar/usuarios-side-bar';
 import { Usuarios } from './usuarios/usuarios';
+import { RouterModule } from '@angular/router';
 
 
 @NgModule({
-  imports: [LayoutRoutingModule, PagesModule, CommonModule],
+  imports: [LayoutRoutingModule, PagesModule, CommonModule, RouterModule],
   exports: [Layout, Nav, Footer],
   declarations: [Layout, Nav, Footer, UsuariosSideBar, Usuarios],
   providers: [],

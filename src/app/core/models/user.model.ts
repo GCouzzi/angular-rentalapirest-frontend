@@ -1,10 +1,18 @@
-export interface User {
-  id: number;
+export interface UsuarioDTO {
   username: string;
   password: string;
-  role: 'ROLE_ADMIN' | 'ROLE_CLIENTE';
-  dataCriacao?: string;
-  dataModificacao?: string;
-  criadoPor?: string;
-  modificadoPor?: string;
+  nomeCompleto: string;
+  cpf: string;
+  telefone: string;
+  email: string;
+}
+
+export interface UsuarioResponseDTO {
+  id: number;
+  username: string;
+  role: string;
+  nomeCompleto: string;
+  cpf: string;
+  telefone: string;
+  email: string;
 }
