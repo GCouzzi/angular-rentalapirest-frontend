@@ -1,5 +1,4 @@
 <div class="container-fluid py-4">
-
   <div class="d-flex align-items-center mb-4">
     <h4 class="mb-0 fw-bold">
       <i class="bi bi-journal-text text-primary me-2"></i>Meus Aluguéis
@@ -12,38 +11,67 @@
         <table class="table table-hover align-middle mb-0">
           <thead class="table-light">
             <tr>
-              <th class="ps-3 text-uppercase small fw-semibold text-muted">Recibo</th>
-              <th class="text-uppercase small fw-semibold text-muted">Veículo</th>
+              <th class="ps-3 text-uppercase small fw-semibold text-muted">
+                Recibo
+              </th>
+              <th class="text-uppercase small fw-semibold text-muted">
+                Veículo
+              </th>
               <th class="text-uppercase small fw-semibold text-muted">Placa</th>
-              <th class="text-uppercase small fw-semibold text-muted">Início</th>
+              <th class="text-uppercase small fw-semibold text-muted">
+                Início
+              </th>
               <th class="text-uppercase small fw-semibold text-muted">Fim</th>
-              <th class="text-uppercase small fw-semibold text-muted">Desconto</th>
+              <th class="text-uppercase small fw-semibold text-muted">
+                Desconto
+              </th>
               <th class="text-uppercase small fw-semibold text-muted">Valor</th>
-              <th class="text-uppercase small fw-semibold text-muted">Status</th>
+              <th class="text-uppercase small fw-semibold text-muted">
+                Status
+              </th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let aluguel of alugueis">
               <td class="ps-3">
-                <span class="font-monospace small text-muted">{{ aluguel.automovelRecibo }}</span>
+                <span class="font-monospace small text-muted"
+                  >{{ aluguel.automovelRecibo }}</span
+                >
               </td>
               <td>
-                <div class="fw-medium">{{ aluguel.automovelMarca }} {{ aluguel.automovelModelo }}</div>
+                <div class="fw-medium">
+                  {{ aluguel.automovelMarca }} {{ aluguel.automovelModelo }}
+                </div>
                 <small class="text-muted">{{ aluguel.automovelCor }}</small>
               </td>
               <td>
-                <span class="badge bg-secondary font-monospace">{{ aluguel.automovelPlaca }}</span>
+                <span class="badge bg-secondary font-monospace"
+                  >{{ aluguel.automovelPlaca }}</span
+                >
               </td>
-              <td class="small text-muted">{{ aluguel.dataInicio | date:'dd/MM/yyyy HH:mm' }}</td>
               <td class="small text-muted">
-                <span *ngIf="aluguel.dataFim">{{ aluguel.dataFim | date:'dd/MM/yyyy HH:mm' }}</span>
-                <span *ngIf="!aluguel.dataFim" class="badge bg-warning text-dark">Em andamento</span>
+                {{ aluguel.dataInicio | date:'dd/MM/yyyy HH:mm' }}
+              </td>
+              <td class="small text-muted">
+                <span *ngIf="aluguel.dataFim"
+                  >{{ aluguel.dataFim | date:'dd/MM/yyyy HH:mm' }}</span
+                >
+                <span
+                  *ngIf="!aluguel.dataFim"
+                  class="badge bg-warning text-dark"
+                  >Em andamento</span
+                >
               </td>
               <td>
-                <span *ngIf="aluguel.desconto" class="text-danger small fw-semibold">
+                <span
+                  *ngIf="aluguel.desconto"
+                  class="text-danger small fw-semibold"
+                >
                   - {{ aluguel.desconto | currency:'BRL' }}
                 </span>
-                <span *ngIf="!aluguel.desconto" class="text-muted small">—</span>
+                <span *ngIf="!aluguel.desconto" class="text-muted small"
+                  >—</span
+                >
               </td>
               <td>
                 <span *ngIf="aluguel.valor" class="fw-semibold text-success">
@@ -77,8 +105,8 @@
       *ngIf="page && page.totalPages > 1"
     >
       <small class="text-muted">
-        Página {{ page.number + 1 }} de {{ page.totalPages }}
-        &mdash; {{ page.totalElements }} registros
+        Página {{ page.number + 1 }} de {{ page.totalPages }} &mdash; {{
+        page.totalElements }} registros
       </small>
 
       <nav>
@@ -117,7 +145,7 @@
         <small class="text-muted">Por página:</small>
         <select
           class="form-select form-select-sm"
-          style="width:auto;"
+          style="width: auto"
           [(ngModel)]="pageSize"
           (change)="onPageSizeChange()"
         >
@@ -129,5 +157,10 @@
       </div>
     </div>
   </div>
-
+  @if(errorMessage){
+  <div class="alert alert-danger d-flex align-items-center gap-2 mt-2">
+    <i class="bi bi-exclamation-triangle-fill"></i>
+    {{ errorMessage }}
+  </div>
+  }
 </div>

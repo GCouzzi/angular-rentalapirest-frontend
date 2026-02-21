@@ -1,4 +1,7 @@
-<div class="sidebar bg-light border-end d-flex flex-column" style="min-height: calc(100vh - 140px); width: 250px;">
+<div
+  class="sidebar bg-light border-end d-flex flex-column"
+  style="min-height: calc(100vh - 140px); width: 250px"
+>
   <div class="sidebar-header bg-primary text-white p-3">
     <h5 class="mb-0">
       <i class="bi bi-people-fill me-2"></i>
@@ -19,6 +22,7 @@
           Lista de automóveis
         </a>
       </li>
+      @if(isAdmin){
       <li class="nav-item">
         <a
           routerLink="/automoveis/novo"
@@ -29,6 +33,7 @@
           Novo automóvel
         </a>
       </li>
+      }
       <li class="nav-item">
         <a
           routerLink="/automoveis/buscar"

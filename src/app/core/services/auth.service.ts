@@ -1,8 +1,8 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { LoginRequest, LoginResponse } from '../models/auth.model';
-import { catchError, Observable, throwError } from 'rxjs';
-import { AppApiError } from '../models/app-api-error.model';
+import { Observable } from 'rxjs';
+import { jwtDecode } from 'jwt-decode';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -12,8 +12,7 @@ export class AuthService {
   constructor(private readonly _http: HttpClient) { }
 
   login(credentials: LoginRequest): Observable<LoginResponse> {
-    return this._http.post<LoginResponse>(`${this.baseUrl}`, credentials)
-      .pipe(catchError((err) => this.handleError(err)))
+    return this._http.post<LoginResponse>(`${this.baseUrl}`, credentials);
   }
 
   setToken(token: string) {
@@ -28,12 +27,19 @@ export class AuthService {
     return !!this.getToken();
   }
 
-  logout(): void {
-    localStorage.removeItem('token');
+  public isAdmin(): boolean {
+    const token = this.getToken();
+    if (!token) return false;
+
+    try {
+      const payload: any = jwtDecode(token);
+      return payload.role === 'ROLE_ADMIN' || payload.role === 'ADMIN';
+    } catch (error) {
+      return false;
+    }
   }
 
-  private handleError(err: HttpErrorResponse) {
-    let msg = err.error?.message || 'Erro inesperado.';
-    return throwError(() => new AppApiError(msg, err.status));
+  logout(): void {
+    localStorage.removeItem('token');
   }
 }

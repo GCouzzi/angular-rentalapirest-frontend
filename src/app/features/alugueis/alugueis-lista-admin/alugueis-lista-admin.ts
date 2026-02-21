@@ -5,24 +5,40 @@ import { AluguelService } from '../../../core/services/aluguel.service';
 import { AppApiError } from '../../../core/models/app-api-error.model';
 
 @Component({
-  selector: 'app-alugueis-lista',
+  selector: 'app-alugueis-lista-admin',
   standalone: false,
-  templateUrl: './alugueis-lista.html',
-  styleUrl: './alugueis-lista.scss',
+  templateUrl: './alugueis-lista-admin.html',
+  styleUrl: './alugueis-lista-admin.scss',
 })
-export class AlugueisLista {
+export class AlugueisListaAdmin {
   alugueis: AluguelResponseDTO[] = [];
   page: Page<AluguelResponseDTO> | null = null;
-  errorMessage = '';
+  errorMessage: string = '';
   currentPage = 0;
   pageSize = 10;
 
   constructor(private readonly _aluguelService: AluguelService,
-    private readonly _cdr: ChangeDetectorRef) { }
+    private readonly _cdr: ChangeDetectorRef
+  ) { }
 
   ngOnInit(): void {
     this.loadAlugueis();
   }
+
+  loadAlugueis(): void {
+    this._aluguelService.findAll().subscribe({
+      next: (response: Page<AluguelResponseDTO>) => {
+        this.alugueis = response.content;
+        this.page = response;
+        this._cdr.markForCheck();
+      },
+      error: (err: AppApiError) => {
+        this.errorMessage = `Error ${err.status} - ${err.message}`
+        this._cdr.markForCheck();
+      }
+    })
+  }
+
 
   goToPage(p: number): void {
     this.currentPage = p;
@@ -41,19 +57,5 @@ export class AlugueisLista {
     const range: number[] = [];
     for (let i = start; i <= end; i++) range.push(i);
     return range;
-  }
-
-  loadAlugueis(): void {
-    this._aluguelService.findAllPessoal().subscribe({
-      next: (response: Page<AluguelResponseDTO>) => {
-        this.alugueis = response.content;
-        this.page = response;
-        this._cdr.markForCheck();
-      },
-      error: (err: AppApiError) => {
-        this.errorMessage = `Error ${err.status} - ${err.message}`
-        this._cdr.markForCheck();
-      }
-    })
   }
 }

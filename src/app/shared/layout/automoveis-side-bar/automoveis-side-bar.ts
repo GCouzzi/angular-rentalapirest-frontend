@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-automoveis-side-bar',
@@ -7,5 +8,10 @@ import { Component } from '@angular/core';
   styleUrl: './automoveis-side-bar.scss',
 })
 export class AutomoveisSideBar {
+  isAdmin: boolean = false;
+  constructor(private readonly _authService: AuthService) { }
 
+  ngOnInit() {
+    this.isAdmin = this._authService.isAdmin();
+  }
 }

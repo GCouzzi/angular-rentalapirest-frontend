@@ -6,6 +6,7 @@ import { AlugueisRoutingModule } from './alugueis-routing-module';
 import { AlugueisBusca } from './alugueis-busca/alugueis-busca';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { AlugueisListaAdmin } from './alugueis-lista-admin/alugueis-lista-admin';
 
 @NgModule({
   imports: [AlugueisRoutingModule, FormsModule, CommonModule, ReactiveFormsModule],
@@ -14,7 +15,8 @@ import { CommonModule } from '@angular/common';
     AlugueisNovo,
     AlugueisCheckout,
     AlugueisLista,
-    AlugueisBusca
+    AlugueisBusca,
+    AlugueisListaAdmin
   ],
   providers: [],
 })

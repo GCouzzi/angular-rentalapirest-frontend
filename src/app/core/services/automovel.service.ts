@@ -1,7 +1,6 @@
-import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, Observable, throwError } from 'rxjs';
-import { AppApiError } from '../models/app-api-error.model';
+import { Observable } from 'rxjs';
 import { AutomovelDTO, AutomovelResponseDTO } from '../models/automovel.model';
 import { Page } from '../models/page.model';
 
@@ -13,14 +12,12 @@ export class AutomovelService {
   constructor(private readonly _http: HttpClient) { }
 
   register(automovel: AutomovelDTO): Observable<AutomovelResponseDTO> {
-    return this._http.post<AutomovelResponseDTO>(`${this.baseUrl}`, automovel)
-      .pipe(catchError((err) => this.handleError(err)))
+    return this._http.post<AutomovelResponseDTO>(`${this.baseUrl}`, automovel);
   }
 
   findByPlaca(placa: string): Observable<AutomovelResponseDTO> {
     const encodedPlaca = encodeURIComponent(placa);
-    return this._http.get<AutomovelResponseDTO>(`${this.baseUrl}/placa/${encodedPlaca}`)
-      .pipe(catchError((err) => this.handleError(err)))
+    return this._http.get<AutomovelResponseDTO>(`${this.baseUrl}/placa/${encodedPlaca}`);
   }
 
   findAll(page: number = 0, size: number = 10, sortBy: string = 'id', direction: string = 'asc'): Observable<Page<AutomovelResponseDTO>> {
@@ -31,19 +28,15 @@ export class AutomovelService {
       .set('sortBy', sortBy)
       .set('direction', direction);
 
-    return this._http.get<Page<AutomovelResponseDTO>>(`${this.baseUrl}`, { params })
-      .pipe(catchError((err) => this.handleError(err)));;
+    return this._http.get<Page<AutomovelResponseDTO>>(`${this.baseUrl}`, { params });
   }
 
   deleteByPlaca(placa: string): Observable<void> {
     const encodedPlaca = encodeURIComponent(placa);
-    return this._http.delete<void>(`${this.baseUrl}/placa/${encodedPlaca}`)
-      .pipe(catchError((err) => this.handleError(err)))
+    return this._http.delete<void>(`${this.baseUrl}/placa/${encodedPlaca}`);
   }
 
-  private handleError(err: HttpErrorResponse) {
-    let msg = err.error?.message || 'Erro inesperado.';
-    return throwError(() => new AppApiError(msg, err.status));
+  findAllCustom(): Observable<AutomovelResponseDTO[]> {
+    return this._http.get<AutomovelResponseDTO[]>(`${this.baseUrl}/all`);
   }
-
 }

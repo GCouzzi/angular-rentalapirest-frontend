@@ -1,4 +1,4 @@
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -9,6 +9,8 @@ import { Automoveis } from './shared/layout/automoveis/automoveis';
 import { AutomoveisSideBar } from './shared/layout/automoveis-side-bar/automoveis-side-bar';
 import { Alugueis } from './shared/layout/alugueis/alugueis';
 import { AlugueisSideBar } from './shared/layout/alugueis-side-bar/alugueis-side-bar';
+import { AuthInterceptor } from './core/interceptors/auth.interceptor';
+import { ErrorInterceptor } from './core/interceptors/error.interceptor';
 
 
 @NgModule({
@@ -26,6 +28,8 @@ import { AlugueisSideBar } from './shared/layout/alugueis-side-bar/alugueis-side
     ComponentsModule,
   ],
   providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
   ],
   bootstrap: [App]
 })

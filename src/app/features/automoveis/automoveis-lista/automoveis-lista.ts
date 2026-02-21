@@ -3,6 +3,7 @@ import { AutomovelResponseDTO } from '../../../core/models/automovel.model';
 import { Page } from '../../../core/models/page.model';
 import { AutomovelService } from '../../../core/services/automovel.service';
 import { AppApiError } from '../../../core/models/app-api-error.model';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-automoveis-lista',
@@ -13,16 +14,18 @@ import { AppApiError } from '../../../core/models/app-api-error.model';
 export class AutomoveisLista {
   automoveis: AutomovelResponseDTO[] = [];
   page: Page<AutomovelResponseDTO> | null = null;
-
+  isAdmin: boolean = false
   currentPage = 0;
   pageSize = 10;
   errorMessage: string = '';
 
   constructor(private readonly _automovelService: AutomovelService,
-    private readonly _cdr: ChangeDetectorRef) { }
+    private readonly _cdr: ChangeDetectorRef,
+    private readonly _authService: AuthService) { }
 
   ngOnInit(): void {
     this.loadAutomoveis();
+    this.isAdmin = this._authService.isAdmin();
   }
 
   onDelete(placa: string): void {

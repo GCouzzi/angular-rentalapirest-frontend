@@ -41,9 +41,13 @@ export class AutomoveisNovo implements OnInit {
       return;
     }
 
-    this._automovelService.register(this.form.value).subscribe({
+    const value = { ...this.form.value }
+    value.placa = value.placa?.toUpperCase();
+
+    this._automovelService.register(value).subscribe({
       next: (response) => {
         this.sucesso = true;
+        this.errorMessage = '';
         this._cdr.markForCheck();
       },
       error: (err: AppApiError) => {

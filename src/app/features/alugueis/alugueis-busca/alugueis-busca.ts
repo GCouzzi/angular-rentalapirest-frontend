@@ -1,7 +1,10 @@
-import { Component } from '@angular/core';
-import { UsuarioResponseDTO } from '../../../core/models/user.model';
+import { UsuarioResponseDTO } from './../../../core/models/user.model';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { AluguelResponseDTO } from '../../../core/models/aluguel.model';
 import { Page } from '../../../core/models/page.model';
+import { AluguelService } from '../../../core/services/aluguel.service';
+import { UsuarioService } from '../../../core/services/usuario.service';
+import { AppApiError } from '../../../core/models/app-api-error.model';
 
 @Component({
   selector: 'app-alugueis-busca',
@@ -22,120 +25,70 @@ export class AlugueisBusca {
   currentPage = 0;
   pageSize = 10;
 
+  constructor(private readonly _aluguelService: AluguelService,
+    private readonly _cdr: ChangeDetectorRef,
+    private readonly _usuarioService: UsuarioService) { }
+
   ngOnInit(): void {
     this.loadUsuarios();
   }
 
   loadUsuarios(): void {
-    this.usuarios = [
-      {
-        id: 1,
-        username: 'joao.silva',
-        nomeCompleto: 'João da Silva',
-        email: 'joao.silva@email.com',
-        cpf: '111.222.333-44',
-        telefone: '11999998888',
-        role: 'CLIENTE'
+    this._usuarioService.findAllCustom().subscribe({
+      next: (response: UsuarioResponseDTO[]) => {
+        this.usuarios = response;
+        this._cdr.markForCheck();
       },
-      {
-        id: 2,
-        username: 'maria.souza',
-        nomeCompleto: 'Maria Souza',
-        email: 'maria.souza@email.com',
-        cpf: '555.666.777-88',
-        telefone: '21988887777',
-        role: 'CLIENTE'
-      },
-      {
-        id: 3,
-        username: 'admin.master',
-        nomeCompleto: 'Administrador do Sistema',
-        email: 'admin@locadora.com',
-        cpf: '000.000.000-00',
-        telefone: '11900000000',
-        role: 'ADMIN'
-      },
-      {
-        id: 4,
-        username: 'carlos.pereira',
-        nomeCompleto: 'Carlos Eduardo Pereira',
-        email: 'carlos.edu@email.com',
-        cpf: '123.456.789-00',
-        telefone: '31977776666',
-        role: 'CLIENTE'
-      },
-      {
-        id: 5,
-        username: 'ana.costa',
-        nomeCompleto: 'Ana Paula Costa',
-        email: 'ana.costa@email.com',
-        cpf: '987.654.321-99',
-        telefone: '41966665555',
-        role: 'CLIENTE'
+      error: (err: AppApiError) => {
+        this.errorMessage = `Error ${err.status} - ${err.message}`;
+        this._cdr.markForCheck();
       }
-    ];
+    });
   }
 
   onBuscarPorRecibo(): void {
     if (!this.recibo.trim()) return;
-    this.errorMessage = '';
-    this.resultadoRecibo = null;
-    this.alugueis = [];
-    this.page = null;
+    this.limparResultados();
 
-    this.resultadoRecibo = {
-      usuarioUsername: 'joao.silva',
-      automovelMarca: 'Toyota',
-      automovelModelo: 'Corolla XEI',
-      automovelCor: 'Prata',
-      automovelPlaca: 'ABC-1234',
-      automovelRecibo: this.recibo,
-      dataInicio: '2024-03-01 08:00:00',
-      dataFim: '2024-03-01 10:30:00',
-      valor: 375.00,
-      desconto: 37.50
-    };
+    this._aluguelService.findByRecibo(this.recibo).subscribe({
+      next: (response: AluguelResponseDTO) => {
+        this.resultadoRecibo = response;
+        this._cdr.markForCheck();
+      },
+      error: (err: AppApiError) => {
+        this.errorMessage = `Error ${err.status} - ${err.message}`;
+        this._cdr.markForCheck();
+      }
+    });
   }
 
-  onBuscarPorUsername(): void {
+  onBuscarPorUsername(pagina: number = 0): void {
     if (!this.username.trim()) return;
-    this.errorMessage = '';
-    this.resultadoRecibo = null;
-    this.alugueis = [];
-    this.page = null;
-    this.currentPage = 0;
+    this.currentPage = pagina;
+    this.limparResultados();
 
-    this.alugueis = [
-      {
-        usuarioUsername: this.username,
-        automovelMarca: 'Toyota',
-        automovelModelo: 'Corolla XEI',
-        automovelCor: 'Prata',
-        automovelPlaca: 'ABC-1234',
-        automovelRecibo: '20240301080000',
-        dataInicio: '2024-03-01 08:00:00',
-        dataFim: '2024-03-01 10:30:00',
-        valor: 375.00,
-        desconto: 37.50
-      },
-      {
-        usuarioUsername: this.username,
-        automovelMarca: 'Honda',
-        automovelModelo: 'Civic Touring',
-        automovelCor: 'Preto',
-        automovelPlaca: 'XYZ-5678',
-        automovelRecibo: '20240310140000',
-        dataInicio: '2024-03-10 14:00:00',
-        dataFim: null,
-        valor: null,
-        desconto: null
-      }
-    ];
+    this._aluguelService.findAllByUsername(
+      this.username,
+      this.currentPage,
+      this.pageSize
+    )
+      .subscribe({
+        next: (response: Page<AluguelResponseDTO>) => {
+          this.page = response;
+          this.alugueis = response.content;
+          this._cdr.markForCheck();
+        },
+        error: (err: AppApiError) => {
+          this.errorMessage = `Error ${err.status} - ${err.message}`;
+          this._cdr.markForCheck();
+        }
+      });
   }
 
   goToPage(p: number): void {
-    this.currentPage = p;
-    this.onBuscarPorUsername();
+    if (p != this.currentPage) {
+      this.onBuscarPorUsername(p);
+    }
   }
 
   onPageSizeChange(): void {
@@ -155,10 +108,14 @@ export class AlugueisBusca {
   onLimpar(): void {
     this.recibo = '';
     this.username = '';
+    this.limparResultados();
+  }
+
+  private limparResultados(): void {
     this.errorMessage = '';
     this.resultadoRecibo = null;
     this.alugueis = [];
     this.page = null;
-    this.currentPage = 0;
+    this._cdr.markForCheck();
   }
 }
